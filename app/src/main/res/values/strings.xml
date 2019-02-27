@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">LightController</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_color">ColorActivity</string>
+    <string name="switchLabel">Switch</string>
+    <string name="colorButtonText">Color</string>
+</resources>
