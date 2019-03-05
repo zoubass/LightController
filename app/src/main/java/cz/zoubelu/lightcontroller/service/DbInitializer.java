@@ -8,7 +8,7 @@ public class DbInitializer {
 
 
     public static AppDatabase initDb(Activity activity) {
-        db = Room.databaseBuilder(activity, AppDatabase.class, "test").build();
+        db = Room.databaseBuilder(activity, AppDatabase.class, "test1").build();
         return db;
     }
 

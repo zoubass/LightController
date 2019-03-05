@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Statistics {
     private AppOperations appOps;
-    private List<LightingValues> lightingValues;
+    private List<LightingDay> lightingValues;
     private List<MotionDetected> motionDetected;
 
     public AppOperations getAppOps() {
@@ -15,11 +15,11 @@ public class Statistics {
         this.appOps = appOps;
     }
 
-    public List<LightingValues> getLightingValues() {
+    public List<LightingDay> getLightingValues() {
         return lightingValues;
     }
 
-    public void setLightingValues(List<LightingValues> lightingValues) {
+    public void setLightingValues(List<LightingDay> lightingValues) {
         this.lightingValues = lightingValues;
     }
 

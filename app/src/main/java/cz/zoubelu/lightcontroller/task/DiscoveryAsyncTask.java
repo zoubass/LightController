@@ -20,7 +20,6 @@ import java.util.List;
 import cz.zoubelu.lightcontroller.MainActivity;
 import cz.zoubelu.lightcontroller.R;
 import cz.zoubelu.lightcontroller.domain.Device;
-import cz.zoubelu.lightcontroller.service.DbInitializer;
 
 public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
 
@@ -28,7 +27,7 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
 
     private static final String BEACON_RESPONSE = "HELL0_THERE";
 
-    private String response;
+    private String hostIP;
 
     public DiscoveryAsyncTask(MainActivity activity) {
         this.activity = activity;
@@ -55,8 +54,8 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
             Device device = new Device();
             device.setActual_ip(hostIp);
             device.setName("Mr.Lighty");
-            discoveryText.setText(device.getName());
-            DbInitializer.getDb().deviceDao().insert(device);
+            discoveryText.setText("Connected to: " + device.getName());
+            new InsertDeviceIntoDbAsyncTask().execute(device);
             activity.setActualDevice(device);
         } else {
             discoveryText.setText("No device found!");
@@ -71,20 +70,22 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
 
     private String discoverIps(List<String> ips, String subnet) {
         int i = 1;
-        for (String ipEnd : ips) {
-            publishProgress(i * 100 / ips.size());
-            String server = findDevice(subnet, ipEnd);
-            if (server != null) {
-                return server;
+        while (hostIP == null) {
+            for (String ipEnd : ips) {
+                publishProgress(i * 100 / ips.size());
+                String server = findDevice(subnet, ipEnd);
+                if (server != null) {
+                    return server;
+                }
+                i++;
             }
-            i++;
         }
-        return null;
+        return hostIP;
     }
 
     private List<String> generateCloseIps(String myIP) {
         List<String> ips = new ArrayList<>();
-        String rawValue = myIP.substring(myIP.lastIndexOf(".") + 1, myIP.length());
+        String rawValue = myIP.substring(myIP.lastIndexOf(".") + 1);
         Integer value = Integer.valueOf(rawValue);
 
         for (int i = value - 5; i < value + 6; i++) {
@@ -94,17 +95,19 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
     }
 
     private String findDevice(String subnet, String ipEnd) {
-        String hostIP = subnet + ipEnd;
+        final String hostIP = subnet + ipEnd;
 
         String url = "http://" + hostIP + "/beacon";
         RequestQueue queue = Volley.newRequestQueue(activity);
 
         // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+        final StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        setResponse(response);
+                        if (response.equals(BEACON_RESPONSE)) {
+                            setHostIP(hostIP);
+                        }
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -116,7 +119,7 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
 
-        return response != null ? response.equals(BEACON_RESPONSE) ? hostIP : null : null;
+        return null;
     }
 
     private List<String> generateSubAddresses() {
@@ -127,11 +130,11 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
         return ips;
     }
 
-    public String getResponse() {
-        return response;
+    public String getHostIP() {
+        return hostIP;
     }
 
-    public void setResponse(String response) {
-        this.response = response.isEmpty() ? "" : response;
+    public void setHostIP(String hostIP) {
+        this.hostIP = hostIP;
     }
 }

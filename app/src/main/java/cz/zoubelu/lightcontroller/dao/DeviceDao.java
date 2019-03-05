@@ -12,7 +12,7 @@ import cz.zoubelu.lightcontroller.domain.Device;
 public interface DeviceDao {
 
     @Insert
-    void insert(Device device);
+    void save(Device device);
 
     @Query("SELECT * FROM  device")
     List<Device> findAll();

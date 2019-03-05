@@ -9,10 +9,10 @@ import cz.zoubelu.lightcontroller.dao.LightingValuesDao;
 import cz.zoubelu.lightcontroller.dao.MotionDetectedDao;
 import cz.zoubelu.lightcontroller.domain.AppOperations;
 import cz.zoubelu.lightcontroller.domain.Device;
-import cz.zoubelu.lightcontroller.domain.LightingValues;
+import cz.zoubelu.lightcontroller.domain.LightingDay;
 import cz.zoubelu.lightcontroller.domain.MotionDetected;
 
-@Database(entities = {AppOperations.class, LightingValues.class, MotionDetected.class, Device.class}, version = 1)
+@Database(entities = {AppOperations.class, LightingDay.class, MotionDetected.class, Device.class}, version = 1)
 public abstract class AppDatabase extends RoomDatabase {
 
     public abstract DeviceDao deviceDao();

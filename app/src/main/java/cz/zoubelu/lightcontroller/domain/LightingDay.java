@@ -5,12 +5,15 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
 @Entity
-public class LightingValues {
+public class LightingDay {
     @PrimaryKey(autoGenerate = true)
     private long id;
 
-    @ColumnInfo(name = "day_time")
-    private long dayTime;
+    @ColumnInfo(name = "day")
+    private long day;
+
+    @ColumnInfo(name = "hour")
+    private int hour;
 
     private double value;
 
@@ -22,13 +25,6 @@ public class LightingValues {
         this.id = id;
     }
 
-    public long getDayTime() {
-        return dayTime;
-    }
-
-    public void setDayTime(long dayTime) {
-        this.dayTime = dayTime;
-    }
 
     public double getValue() {
         return value;
@@ -36,5 +32,22 @@ public class LightingValues {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+
+    public int getHour() {
+        return hour;
+    }
+
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public long getDay() {
+        return day;
+    }
+
+    public void setDay(long day) {
+        this.day = day;
     }
 }

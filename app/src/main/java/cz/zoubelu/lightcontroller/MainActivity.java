@@ -1,6 +1,7 @@
 package cz.zoubelu.lightcontroller;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -11,11 +12,11 @@ import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import java.util.List;
 
 import cz.zoubelu.lightcontroller.domain.Device;
+import cz.zoubelu.lightcontroller.service.BackgroundStatsLoaderService;
 import cz.zoubelu.lightcontroller.service.DbInitializer;
 import cz.zoubelu.lightcontroller.task.CheckDeviceAsyncTask;
 import cz.zoubelu.lightcontroller.task.DiscoveryAsyncTask;
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         setContentView(R.layout.activity_main);
 
@@ -78,16 +80,28 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), ColorActivity.class);
-                intent.putExtra("deviceIp", actualDevice.getActual_ip());
+                intent.putExtra("deviceIp", actualDevice != null? actualDevice.getActual_ip():"");
                 startActivity(intent);
             }
         });
 
-        new CheckDeviceAsyncTask(this).execute();
+        findViewById(R.id.statistics_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), StatsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+//        new CheckDeviceAsyncTask(this).execute();
 
         if (actualDevice == null) {
             new DiscoveryAsyncTask(MainActivity.this).execute();
         }
+
+        Intent msgIntent = new Intent(this, BackgroundStatsLoaderService.class);
+
+        startService(msgIntent);
     }
 
     @Override
