@@ -57,8 +57,11 @@ public class BackgroundStatsLoaderService extends IntentService {
 
 
         if (mWifi.isConnected() && db != null) {
-            Device device = db.deviceDao().findAll().get(0);
-            sendRequestToGetStats(device.getActual_ip());
+            List<Device> devices = db.deviceDao().findAll();
+            if (!devices.isEmpty()) {
+                sendRequestToGetStats(devices.get(0).getActual_ip());
+            }
+
         }
     }
 
