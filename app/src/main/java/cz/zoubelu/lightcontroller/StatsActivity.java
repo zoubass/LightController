@@ -107,13 +107,13 @@ public class StatsActivity extends AppCompatActivity {
                 R.drawable.card2,
                 R.drawable.card3};
 
-        Card a = new Card("All Time stats", 13, covers[0]);
+        Card a = new Card("All Time stats", covers[0]);
         cardList.add(a);
 
-        a = new Card("Last Day", 8, covers[1]);
+        a = new Card("Last Day", covers[1]);
         cardList.add(a);
 
-        a = new Card("Motion", 11, covers[2]);
+        a = new Card("Motion", covers[2]);
         cardList.add(a);
 
         adapter.notifyDataSetChanged();

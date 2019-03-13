@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     android:orientation="horizontal"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".AllTimeStatsActivity"
-    tools:showIn="@layout/activity_all_time_stats">
+    tools:context=".LastDayStatsActivity"
+    tools:showIn="@layout/activity_last_day_stats">
 
     <com.jjoe64.graphview.GraphView
-        android:id="@+id/graph_total"
+        android:id="@+id/graph_previous_day"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"

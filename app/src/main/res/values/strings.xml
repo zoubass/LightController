@@ -9,9 +9,9 @@
     <string name="title_activity_all_time_stats">AllTimeStatsActivity</string>
 
 
-
     <string name="action_add_favourite">Add to Favourites</string>
     <string name="action_play_next">Play Next</string>
     <string name="backdrop_title">STATISTICS</string>
     <string name="backdrop_subtitle">Keep track of your light</string>
+    <string name="title_activity_previous_day_stats">PreviousDayStats</string>
 </resources>

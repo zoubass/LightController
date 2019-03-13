@@ -11,19 +11,24 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import cz.zoubelu.lightcontroller.domain.Device;
-import cz.zoubelu.lightcontroller.domain.Statistics;
 
-public class GetStatisticsRequestAsyncTask extends AsyncTask<Void, Void, Statistics> {
-
-    private Device device;
+public class SendRequestSwitchAsyncTask extends AsyncTask<Void, Void, Void> {
 
     private Activity activity;
 
-    private Statistics statistics;
+    private boolean switchOn;
+
+    private Device device;
+
+    public SendRequestSwitchAsyncTask(Activity activity, boolean switchOn, Device actualDevice) {
+        this.activity = activity;
+        this.switchOn = switchOn;
+        this.device = actualDevice;
+    }
 
     @Override
-    protected Statistics doInBackground(Void... voids) {
-        String url = "http://" + device.getActual_ip() + "/statistics";
+    protected Void doInBackground(Void... voids) {
+        String url = "http://" + device.getActual_ip() + "/led/" + (switchOn ? "on" : "off");
         RequestQueue queue = Volley.newRequestQueue(activity);
 
         // Request a string response from the provided URL.
@@ -43,16 +48,6 @@ public class GetStatisticsRequestAsyncTask extends AsyncTask<Void, Void, Statist
 
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-
-        return new Statistics();
-    }
-
-
-    public Statistics getStatistics() {
-        return statistics;
-    }
-
-    public void setStatistics(Statistics statistics) {
-        this.statistics = statistics;
+        return null;
     }
 }

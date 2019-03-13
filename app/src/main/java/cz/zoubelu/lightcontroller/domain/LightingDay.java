@@ -4,7 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity
+@Entity()
 public class LightingDay {
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -15,7 +15,18 @@ public class LightingDay {
     @ColumnInfo(name = "hour")
     private int hour;
 
+    @ColumnInfo(name = "date")
+    private long date;
+
     private double value;
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
 
     public long getId() {
         return id;

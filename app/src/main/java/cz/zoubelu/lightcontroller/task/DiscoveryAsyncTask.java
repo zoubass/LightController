@@ -42,7 +42,7 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
         String subnet = myIP.substring(0, myIP.lastIndexOf(".") + 1);
         String server = discoverIps(generateCloseIps(myIP), subnet);
 
-
+        publishProgress(0);
         return server == null ? discoverIps(generateSubAddresses(), subnet) : server;
     }
 
@@ -70,7 +70,7 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
 
     private String discoverIps(List<String> ips, String subnet) {
         int i = 1;
-        while (hostIP == null) {
+        while (hostIP == null && i < ips.size()) {
             for (String ipEnd : ips) {
                 publishProgress(i * 100 / ips.size());
                 String server = findDevice(subnet, ipEnd);

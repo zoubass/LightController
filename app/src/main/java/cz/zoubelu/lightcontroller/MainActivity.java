@@ -13,15 +13,20 @@ import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import cz.zoubelu.lightcontroller.domain.Device;
+import cz.zoubelu.lightcontroller.domain.LightingDay;
 import cz.zoubelu.lightcontroller.service.BackgroundStatsLoaderService;
 import cz.zoubelu.lightcontroller.service.DbInitializer;
-import cz.zoubelu.lightcontroller.task.CheckDeviceAsyncTask;
 import cz.zoubelu.lightcontroller.task.DiscoveryAsyncTask;
 import cz.zoubelu.lightcontroller.task.SendDutyRequestAsyncTask;
-import cz.zoubelu.lightcontroller.task.SendRequestAsyncTask;
+import cz.zoubelu.lightcontroller.task.SendRequestSwitchAsyncTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,9 +53,9 @@ public class MainActivity extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (actualDevice != null) {
                     if (isChecked) {
-                        new SendRequestAsyncTask(MainActivity.this, true, actualDevice).execute();
+                        new SendRequestSwitchAsyncTask(MainActivity.this, true, actualDevice).execute();
                     } else {
-                        new SendRequestAsyncTask(MainActivity.this, false, actualDevice).execute();
+                        new SendRequestSwitchAsyncTask(MainActivity.this, false, actualDevice).execute();
                     }
                 }
             }
@@ -80,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), ColorActivity.class);
-                intent.putExtra("deviceIp", actualDevice != null? actualDevice.getActual_ip():"");
+                intent.putExtra("deviceIp", actualDevice != null ? actualDevice.getActual_ip() : "");
                 startActivity(intent);
             }
         });
@@ -102,6 +107,39 @@ public class MainActivity extends AppCompatActivity {
         Intent msgIntent = new Intent(this, BackgroundStatsLoaderService.class);
 
         startService(msgIntent);
+
+//        new SaveLightingDayAsyncTask().execute(createTestData());
+    }
+
+    private List<LightingDay> createTestData() {
+        List<LightingDay> lightingValues = new ArrayList<>();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+            for (int day = 10; day < 14; day++) {
+
+                for (int hour = 0; hour < 24; hour++) {
+                    Date date = sdf.parse("2019-03-" + String.valueOf(day) + " " + String.valueOf(hour) + ":00:00");
+                    Date dayDate = sdf.parse("2019-03-" + String.valueOf(day) + " 00:00:00");
+
+                    LightingDay lightingDay = new LightingDay();
+                    lightingDay.setDay(dayDate.getTime());
+                    lightingDay.setDate(date.getTime());
+                    lightingDay.setHour(hour);
+                    if (hour < 7 || hour > 22) {
+                        lightingDay.setValue(0);
+                    } else {
+                        lightingDay.setValue(new Random().nextInt((247 - 124) + 1) + 124);
+                    }
+                    lightingValues.add(lightingDay);
+                }
+            }
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return lightingValues;
     }
 
     @Override

@@ -6,10 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
-import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -20,39 +17,24 @@ import java.util.Random;
 
 import cz.zoubelu.lightcontroller.domain.LightingDay;
 import cz.zoubelu.lightcontroller.service.DbInitializer;
+import cz.zoubelu.lightcontroller.task.LoadDataAndShowTotalAsyncTask;
 
 public class AllTimeStatsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(R.layout.activity_all_time_stats);
 
-        List<LightingDay> lightingValues = DbInitializer.getDb().lightingValuesDao().findAll();
-
-        List<DataPoint> dataPoints = generateDataPoints(lightingValues);
-
-        GraphView graph = findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints.toArray(new DataPoint[0]));
-        graph.setTitle("Total light brightness");
-        graph.addSeries(series);
-
-        graph.getViewport().setMinY(0);
-        graph.getViewport().setMaxY(256);
-
-        graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setXAxisBoundsManual(true);
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(this));
-        graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-
-        graph.getViewport().setMinX(dataPoints.get(0).getX());
-        graph.getViewport().setMaxX(dataPoints.get(dataPoints.size() - 1).getX());
-        graph.getViewport().setXAxisBoundsManual(true);
-
+        if (DbInitializer.getDb() == null) {
+            DbInitializer.initDb(this);
+        }
+        new LoadDataAndShowTotalAsyncTask(this, R.id.graph_total).execute(Boolean.TRUE);
     }
 
     private List<DataPoint> generateDataPoints(List<LightingDay> lightingValues) {

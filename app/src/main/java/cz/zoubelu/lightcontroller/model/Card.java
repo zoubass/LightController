@@ -2,15 +2,13 @@ package cz.zoubelu.lightcontroller.model;
 
 public class Card {
     private String name;
-    private int numOfSongs;
     private int thumbnail;
 
     public Card() {
     }
 
-    public Card(String name, int numOfSongs, int thumbnail) {
+    public Card(String name, int thumbnail) {
         this.name = name;
-        this.numOfSongs = numOfSongs;
         this.thumbnail = thumbnail;
     }
 
@@ -20,14 +18,6 @@ public class Card {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public int getNumOfSongs() {
-        return numOfSongs;
-    }
-
-    public void setNumOfSongs(int numOfSongs) {
-        this.numOfSongs = numOfSongs;
     }
 
     public int getThumbnail() {
