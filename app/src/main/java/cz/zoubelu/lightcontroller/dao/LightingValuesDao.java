@@ -20,6 +20,6 @@ public interface LightingValuesDao {
     @Insert
     void save(LightingDay lightingDay);
 
-    @Query("SELECT max(day) from LightingDay")
+    @Query("SELECT max(date) from LightingDay")
     long findLastDaySaved();
 }

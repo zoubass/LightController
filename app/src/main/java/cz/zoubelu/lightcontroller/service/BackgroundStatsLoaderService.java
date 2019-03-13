@@ -52,8 +52,8 @@ public class BackgroundStatsLoaderService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        long lastDayInDb = db.lightingValuesDao().findLastDaySaved();
-        lastDaySaved = new Date(lastDayInDb);
+        long lastDateInDb = db.lightingValuesDao().findLastDaySaved();
+        lastDaySaved = new Date(lastDateInDb);
 
 
         if (mWifi.isConnected() && db != null) {
@@ -109,9 +109,11 @@ public class BackgroundStatsLoaderService extends IntentService {
                 int hour = Integer.valueOf(dutyHourVals[1]);
 
                 Date date = sdf.parse(day + " " + String.valueOf(hour) + ":00:00");
+                Date dayOnly = sdf.parse(day + " 00:00:00");
 
                 if (lastDaySaved.before(date)) {
-                    lightingDay.setDay(date.getTime());
+                    lightingDay.setDate(date.getTime());
+                    lightingDay.setDay(dayOnly.getTime());
                     lightingDay.setHour(hour);
                     lightingDay.setValue(duty);
 
@@ -120,6 +122,7 @@ public class BackgroundStatsLoaderService extends IntentService {
                     lastDaySaved = date;
                 }
             }
+
             new SaveLightingDayAsyncTask().execute(lightingDays);
 
         } catch (JSONException e) {

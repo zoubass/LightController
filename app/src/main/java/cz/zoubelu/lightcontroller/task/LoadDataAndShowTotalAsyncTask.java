@@ -3,13 +3,13 @@ package cz.zoubelu.lightcontroller.task;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.AsyncTask;
-import android.text.format.DateFormat;
 
+import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
-import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -23,6 +23,7 @@ public class LoadDataAndShowTotalAsyncTask extends AsyncTask<Boolean, Void, List
     private Activity activity;
     private int graphId;
     private boolean isTotal;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd.MM");
 
     public LoadDataAndShowTotalAsyncTask(Activity activity, int graphId) {
         this.activity = activity;
@@ -53,19 +54,35 @@ public class LoadDataAndShowTotalAsyncTask extends AsyncTask<Boolean, Void, List
 
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(dataPoints.toArray(new DataPoint[0]));
 
+        series.setAnimated(true);
+        series.setThickness(10);
+        series.setBackgroundColor(Color.rgb(133, 198, 3));
+        series.setDrawBackground(true);
+//        series.setTitle(isTotal ? "All time stats" : "Last day stats");
+
         GraphView graph = activity.findViewById(graphId);
 
-        graph.setTitle(isTotal ? "All time stats" : "Last day stats");
+        graph.setTitle("All time stats");
         graph.addSeries(series);
 
         graph.getViewport().setMinY(0);
+
         graph.getViewport().setMaxY(100);
 
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setXAxisBoundsManual(true);
 
         if (isTotal) {
-            graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(activity, DateFormat.getMediumDateFormat(activity)));
+            graph.getGridLabelRenderer().setLabelFormatter(new DefaultLabelFormatter() {
+                @Override
+                public String formatLabel(double value, boolean isValueX) {
+                    if (isValueX) {
+                        return sdf.format(new Date((long) value));
+                    } else {
+                        return super.formatLabel(value, isValueX);
+                    }
+                }
+            });
             graph.getGridLabelRenderer().setHorizontalAxisTitle("Days");
             graph.getGridLabelRenderer().setHorizontalAxisTitleColor(Color.WHITE);
             graph.getGridLabelRenderer().setHumanRounding(true);
