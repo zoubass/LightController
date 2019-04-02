@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.text.format.Formatter;
 import android.widget.TextView;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -23,7 +24,12 @@ import cz.zoubelu.lightcontroller.domain.Device;
 
 public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
 
+    public static final String SEARCHING = "Still searching...";
     private MainActivity activity;
+
+    boolean lightHasBeenFound = false;
+
+    private static final int TIMEOUT_MS = 7000;
 
     private static final String BEACON_RESPONSE = "HELL0_THERE";
 
@@ -48,18 +54,7 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
 
     @Override
     protected void onPostExecute(String hostIp) {
-        TextView discoveryText = activity.findViewById(R.id.discover_progress_text_view);
-
-        if (hostIp != null) {
-            Device device = new Device();
-            device.setActual_ip(hostIp);
-            device.setName("Mr.Lighty");
-            discoveryText.setText("Connected to: " + device.getName());
-            new InsertDeviceIntoDbAsyncTask().execute(device);
-            activity.setActualDevice(device);
-        } else {
-            discoveryText.setText("No device found!");
-        }
+        updateUi();
     }
 
     @Override
@@ -99,7 +94,6 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
 
         String url = "http://" + hostIP + "/beacon";
         RequestQueue queue = Volley.newRequestQueue(activity);
-
         // Request a string response from the provided URL.
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -107,6 +101,8 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
                     public void onResponse(String response) {
                         if (response.equals(BEACON_RESPONSE)) {
                             setHostIP(hostIP);
+                            updateUi();
+                            lightHasBeenFound = true;
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -115,11 +111,31 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
                 System.out.println();
             }
         });
-
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         // Add the request to the RequestQueue.
         queue.add(stringRequest);
-
+        if (lightHasBeenFound) {
+            queue.stop();
+        }
         return null;
+    }
+
+    private void updateUi(){
+        TextView discoveryText = activity.findViewById(R.id.discover_progress_text_view);
+
+        if (getHostIP() != null) {
+            Device device = new Device();
+            device.setActual_ip(getHostIP());
+            device.setName("Mr.Lighty");
+            discoveryText.setText("Connected to: " + device.getName());
+            new InsertDeviceIntoDbAsyncTask().execute(device);
+            activity.setActualDevice(device);
+        } else {
+            discoveryText.setText(SEARCHING);
+        }
     }
 
     private List<String> generateSubAddresses() {

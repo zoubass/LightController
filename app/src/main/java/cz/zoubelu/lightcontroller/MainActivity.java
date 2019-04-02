@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,6 +28,9 @@ import cz.zoubelu.lightcontroller.service.DbInitializer;
 import cz.zoubelu.lightcontroller.task.DiscoveryAsyncTask;
 import cz.zoubelu.lightcontroller.task.SendDutyRequestAsyncTask;
 import cz.zoubelu.lightcontroller.task.SendRequestSwitchAsyncTask;
+import cz.zoubelu.lightcontroller.task.SendRequestSwitchAutoLightAsyncTask;
+import cz.zoubelu.lightcontroller.task.SendRequestSwitchCalibrationAsyncTask;
+import cz.zoubelu.lightcontroller.task.SendRequestSwitchDetectMotionAsyncTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -98,6 +102,43 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        ((Switch) findViewById(R.id.auto_light)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (actualDevice != null) {
+                    if (isChecked) {
+                        new SendRequestSwitchAutoLightAsyncTask(MainActivity.this, true, actualDevice).execute();
+                    } else {
+                        new SendRequestSwitchAutoLightAsyncTask(MainActivity.this, false, actualDevice).execute();
+                    }
+                }
+            }
+        });
+        ((Switch) findViewById(R.id.detect_motion)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (actualDevice != null) {
+                    if (isChecked) {
+                        new SendRequestSwitchDetectMotionAsyncTask(MainActivity.this, true, actualDevice).execute();
+                    } else {
+                        new SendRequestSwitchDetectMotionAsyncTask(MainActivity.this, false, actualDevice).execute();
+                    }
+                }
+            }
+        });
+        ((Switch) findViewById(R.id.calibrate_switch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (actualDevice != null) {
+                    if (isChecked) {
+                        new SendRequestSwitchCalibrationAsyncTask(MainActivity.this, true, actualDevice).execute();
+                    } else {
+                        new SendRequestSwitchCalibrationAsyncTask(MainActivity.this, false, actualDevice).execute();
+                    }
+                }
+            }
+        });
+
 //        new CheckDeviceAsyncTask(this).execute();
 
         if (actualDevice == null) {
@@ -105,8 +146,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent msgIntent = new Intent(this, BackgroundStatsLoaderService.class);
-
         startService(msgIntent);
+
+        final TextView discoveryInfoTextView = findViewById(R.id.discover_progress_text_view);
+        discoveryInfoTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (discoveryInfoTextView.getText().equals(DiscoveryAsyncTask.SEARCHING) && actualDevice == null) {
+                    new DiscoveryAsyncTask(MainActivity.this).execute();
+                }
+            }
+        });
 
 //        new SaveLightingDayAsyncTask().execute(createTestData());
     }

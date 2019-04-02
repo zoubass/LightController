@@ -56,7 +56,7 @@ public class LoadDataAndShowTotalAsyncTask extends AsyncTask<Boolean, Void, List
 
         series.setAnimated(true);
         series.setThickness(10);
-        series.setBackgroundColor(Color.rgb(133, 198, 3));
+        series.setBackgroundColor(Color.argb(77,62, 4, 8));
         series.setDrawBackground(true);
 //        series.setTitle(isTotal ? "All time stats" : "Last day stats");
 
@@ -96,7 +96,7 @@ public class LoadDataAndShowTotalAsyncTask extends AsyncTask<Boolean, Void, List
         graph.getViewport().setScalable(true);
         graph.getViewport().setScalableY(true);
 
-        graph.setBackgroundColor(Color.BLACK);
+        //graph.setBackgroundColor(Color.BLACK);
         graph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);
         graph.getGridLabelRenderer().setHorizontalLabelsColor(Color.WHITE);
         graph.getGridLabelRenderer().reloadStyles();

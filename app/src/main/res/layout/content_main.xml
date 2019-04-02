@@ -9,83 +9,128 @@
     tools:layout_editor_absoluteY="25dp"
     tools:showIn="@layout/activity_main">
 
-    <SeekBar
-        android:id="@+id/seekBar"
-        android:layout_width="0dp"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/relativeLayout"
+        android:layout_width="414dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="40dp"
-        android:max="256"
-        app:layout_constraintBottom_toTopOf="@+id/statistics_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/set_color_btn" />
-
-    <Switch
-        android:id="@+id/switchId"
-        android:layout_width="118dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="105dp"
-        android:layout_marginBottom="72dp"
-        android:text="@string/switchLabel"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/set_color_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/set_color_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginBottom="21dp"
-        android:background="@color/black"
-        android:text="@string/colorButtonText"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/seekBar"
-        app:layout_constraintStart_toStartOf="@+id/switchId"
-        app:layout_constraintTop_toBottomOf="@+id/switchId" />
-
-    <TextView
-        android:id="@+id/discover_progress_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="56dp"
-        android:background="@color/black"
-        android:text=""
-        android:textColor="@color/colorAccent"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginRight="2dp"
+        android:background="#77000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/statistics_btn" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/statistics_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="52dp"
-        android:background="@color/black"
-        android:text="@string/statistics_btn_text"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/discover_progress_text_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+        <SeekBar
+            android:id="@+id/seekBar"
+            android:layout_width="371dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="40dp"
+            android:max="256"
+            app:layout_constraintBottom_toTopOf="@+id/statistics_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/set_color_btn" />
 
-    <TextView
-        android:id="@+id/brightness"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="6dp"
-        android:layout_marginRight="6dp"
-        android:text="Brightness"
-        android:textColor="@color/colorAccent"
-        app:layout_constraintEnd_toEndOf="@+id/set_color_btn"
-        app:layout_constraintTop_toTopOf="@+id/seekBar" />
+        <Switch
+            android:id="@+id/switchId"
+            android:layout_width="118dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="105dp"
+            android:layout_marginBottom="72dp"
+            android:text="@string/switchLabel"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/set_color_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/set_color_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="21dp"
+            android:background="@android:color/transparent"
+            android:text="@string/colorButtonText"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/seekBar"
+            app:layout_constraintStart_toStartOf="@+id/switchId"
+            app:layout_constraintTop_toBottomOf="@+id/switchId" />
+
+        <TextView
+            android:id="@+id/discover_progress_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="56dp"
+            android:text=""
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/statistics_btn" />
+
+        <Button
+            android:id="@+id/statistics_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="52dp"
+            android:background="@android:color/transparent"
+            android:text="@string/statistics_btn_text"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/discover_progress_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/seekBar" />
+
+        <TextView
+            android:id="@+id/brightness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginRight="6dp"
+            android:background="@android:color/transparent"
+            android:text="@string/brightness_text"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="@+id/set_color_btn"
+            app:layout_constraintTop_toTopOf="@+id/seekBar" />
+
+        <Switch
+            android:id="@+id/detect_motion"
+            android:layout_width="141dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="detect Motion"
+            app:layout_constraintBaseline_toBaselineOf="@+id/auto_light"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Switch
+            android:id="@+id/auto_light"
+            android:layout_width="107dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="autoLight"
+            app:layout_constraintEnd_toEndOf="@+id/switchId"
+            app:layout_constraintTop_toBottomOf="@+id/switchId" />
+
+        <Switch
+            android:id="@+id/calibrate_switch"
+            android:layout_width="114dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:text="calibrate"
+            app:layout_constraintBaseline_toBaselineOf="@+id/auto_light"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

@@ -14,4 +14,5 @@
     <string name="backdrop_title">STATISTICS</string>
     <string name="backdrop_subtitle">Keep track of your light</string>
     <string name="title_activity_previous_day_stats">PreviousDayStats</string>
+    <string name="brightness_text">Brightness</string>
 </resources>
