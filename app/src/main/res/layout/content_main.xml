@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
     tools:layout_editor_absoluteY="25dp"
     tools:showIn="@layout/activity_main">
@@ -105,17 +104,17 @@
 
         <Switch
             android:id="@+id/detect_motion"
-            android:layout_width="141dp"
+            android:layout_width="113dp"
             android:layout_height="24dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginLeft="16dp"
-            android:text="detect Motion"
+            android:layout_marginStart="32dp"
+            android:layout_marginLeft="32dp"
+            android:text="@string/motionLabel"
             app:layout_constraintBaseline_toBaselineOf="@+id/auto_light"
             app:layout_constraintStart_toStartOf="parent" />
 
         <Switch
             android:id="@+id/auto_light"
-            android:layout_width="107dp"
+            android:layout_width="118dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="autoLight"
