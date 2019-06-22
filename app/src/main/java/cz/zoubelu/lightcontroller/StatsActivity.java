@@ -1,5 +1,6 @@
 package cz.zoubelu.lightcontroller;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -24,6 +25,7 @@ import java.util.List;
 
 import cz.zoubelu.lightcontroller.adapter.CardsAdapter;
 import cz.zoubelu.lightcontroller.model.Card;
+import cz.zoubelu.lightcontroller.service.BackgroundStatsLoaderService;
 
 public class StatsActivity extends AppCompatActivity {
 
@@ -41,7 +43,6 @@ public class StatsActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         setContentView(R.layout.activity_stats);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,6 +68,13 @@ public class StatsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        final Intent statsLoadIntent = new Intent(this, BackgroundStatsLoaderService.class);
+        findViewById(R.id.refresh_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startService(statsLoadIntent);
+            }
+        });
     }
 
 
@@ -75,10 +83,9 @@ public class StatsActivity extends AppCompatActivity {
      * Will show and hide the toolbar title on scroll
      */
     private void initCollapsingToolbar() {
-        final CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(" ");
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        AppBarLayout appBarLayout = findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
         // hiding & showing the title when toolbar expanded & collapsed

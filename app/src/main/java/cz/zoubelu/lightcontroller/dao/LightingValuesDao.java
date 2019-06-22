@@ -14,8 +14,8 @@ public interface LightingValuesDao {
     @Query("SELECT * FROM LightingDay order by day asc")
     List<LightingDay> findAll();
 
-    @Query("SELECT * FROM LightingDay where day = (select max(day) from LightingDay)")
-    List<LightingDay> findForLastDay();
+    @Query("SELECT * FROM LightingDay where day >= :previousDay")
+    List<LightingDay> findForLastDay(long previousDay);
 
     @Insert
     void save(LightingDay lightingDay);

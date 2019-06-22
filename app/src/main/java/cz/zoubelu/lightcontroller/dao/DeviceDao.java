@@ -17,4 +17,6 @@ public interface DeviceDao {
     @Query("SELECT * FROM  device")
     List<Device> findAll();
 
+    @Query("DELETE FROM Device")
+    void deleteAll();
 }

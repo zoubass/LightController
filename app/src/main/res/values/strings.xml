@@ -16,4 +16,5 @@
     <string name="title_activity_previous_day_stats">PreviousDayStats</string>
     <string name="brightness_text">Brightness</string>
     <string name="motionLabel">motion</string>
+    <string name="title_activity_motion_graph">MotionGraphActivity</string>
 </resources>

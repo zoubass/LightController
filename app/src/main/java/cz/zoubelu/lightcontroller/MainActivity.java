@@ -25,6 +25,7 @@ import cz.zoubelu.lightcontroller.domain.Device;
 import cz.zoubelu.lightcontroller.domain.LightingDay;
 import cz.zoubelu.lightcontroller.service.BackgroundStatsLoaderService;
 import cz.zoubelu.lightcontroller.service.DbInitializer;
+import cz.zoubelu.lightcontroller.task.ClearDeviceListAsyncTask;
 import cz.zoubelu.lightcontroller.task.DiscoveryAsyncTask;
 import cz.zoubelu.lightcontroller.task.SendDutyRequestAsyncTask;
 import cz.zoubelu.lightcontroller.task.SendRequestSwitchAsyncTask;
@@ -37,11 +38,16 @@ public class MainActivity extends AppCompatActivity {
     private Device actualDevice;
 
     private List<Device> savedDevices;
+    private Switch switchButton;
+    private Switch autolightSwitch;
+    private Switch detectMotionSwitch;
+    private Switch calibrateSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DbInitializer.initDb(MainActivity.this);
+        new ClearDeviceListAsyncTask().execute();
 
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -50,11 +56,13 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        Switch switchButton = findViewById(R.id.switchId);
-
+        switchButton = findViewById(R.id.switchId);
         switchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    autolightSwitch.setChecked(false);
+                }
                 if (actualDevice != null) {
                     if (isChecked) {
                         new SendRequestSwitchAsyncTask(MainActivity.this, true, actualDevice).execute();
@@ -67,11 +75,10 @@ public class MainActivity extends AppCompatActivity {
 
         SeekBar seekBar = findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            int value;
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-                if (actualDevice != null) {
-                    new SendDutyRequestAsyncTask(MainActivity.this, i, actualDevice).execute();
-                }
+                value = i;
             }
 
             @Override
@@ -81,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                if (actualDevice != null) {
+                    new SendDutyRequestAsyncTask(MainActivity.this, value, actualDevice).execute();
+                }
             }
         });
 
@@ -102,19 +111,27 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ((Switch) findViewById(R.id.auto_light)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+        autolightSwitch = findViewById(R.id.auto_light);
+        autolightSwitch.setChecked(true);
+        autolightSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    switchButton.setChecked(false);
+                }
                 if (actualDevice != null) {
                     if (isChecked) {
                         new SendRequestSwitchAutoLightAsyncTask(MainActivity.this, true, actualDevice).execute();
                     } else {
                         new SendRequestSwitchAutoLightAsyncTask(MainActivity.this, false, actualDevice).execute();
                     }
+
                 }
             }
         });
-        ((Switch) findViewById(R.id.detect_motion)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        detectMotionSwitch = findViewById(R.id.detect_motion);
+        detectMotionSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (actualDevice != null) {
@@ -126,7 +143,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        ((Switch) findViewById(R.id.calibrate_switch)).setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        calibrateSwitch = findViewById(R.id.calibrate_switch);
+        calibrateSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (actualDevice != null) {
@@ -141,12 +159,14 @@ public class MainActivity extends AppCompatActivity {
 
 //        new CheckDeviceAsyncTask(this).execute();
 
+        enableSwitches(false);
         if (actualDevice == null) {
-            new DiscoveryAsyncTask(MainActivity.this).execute();
+            DiscoveryAsyncTask discoveryTask = new DiscoveryAsyncTask(MainActivity.this);
+            discoveryTask.execute();
         }
 
-        Intent msgIntent = new Intent(this, BackgroundStatsLoaderService.class);
-        startService(msgIntent);
+        Intent statsLoadIntent = new Intent(this, BackgroundStatsLoaderService.class);
+        startService(statsLoadIntent);
 
         final TextView discoveryInfoTextView = findViewById(R.id.discover_progress_text_view);
         discoveryInfoTextView.setOnClickListener(new View.OnClickListener() {
@@ -157,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
 
 //        new SaveLightingDayAsyncTask().execute(createTestData());
     }
@@ -220,5 +241,12 @@ public class MainActivity extends AppCompatActivity {
 
     public void setActualDevice(Device actualDevice) {
         this.actualDevice = actualDevice;
+    }
+
+    public void enableSwitches(boolean enabled) {
+        switchButton.setEnabled(enabled);
+        autolightSwitch.setEnabled(enabled);
+        calibrateSwitch.setEnabled(enabled);
+        detectMotionSwitch.setEnabled(enabled);
     }
 }

@@ -29,7 +29,7 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
 
     boolean lightHasBeenFound = false;
 
-    private static final int TIMEOUT_MS = 7000;
+    private static final int TIMEOUT_MS = 500;
 
     private static final String BEACON_RESPONSE = "HELL0_THERE";
 
@@ -133,6 +133,7 @@ public class DiscoveryAsyncTask extends AsyncTask<Object, Integer, String> {
             discoveryText.setText("Connected to: " + device.getName());
             new InsertDeviceIntoDbAsyncTask().execute(device);
             activity.setActualDevice(device);
+            activity.enableSwitches(true);
         } else {
             discoveryText.setText(SEARCHING);
         }
