@@ -79,6 +79,7 @@ public class LoadMotionGraphDataAsyncTask extends AsyncTask<Void, Void, List<Mot
                 }
             }
         });
+        graph.getGridLabelRenderer().setLabelsSpace(3);
         graph.getGridLabelRenderer().setHorizontalAxisTitle("Days");
         graph.getGridLabelRenderer().setHorizontalAxisTitleColor(Color.BLACK);
         graph.getGridLabelRenderer().setHumanRounding(true);

@@ -10,7 +10,9 @@ public class DbInitializer {
 
 
     public static AppDatabase initDb(Activity activity) {
-        db = Room.databaseBuilder(activity, AppDatabase.class, "test1").build();
+        db = Room.databaseBuilder(activity, AppDatabase.class, "testik")
+                .allowMainThreadQueries()
+                .build();
         return db;
     }
 
@@ -19,7 +21,7 @@ public class DbInitializer {
         return db;
     }
 
-    public static void closeDb(){
+    public static void closeDb() {
         if (db != null) {
             db.close();
         }

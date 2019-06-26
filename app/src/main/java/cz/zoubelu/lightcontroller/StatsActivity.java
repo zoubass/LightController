@@ -1,6 +1,5 @@
 package cz.zoubelu.lightcontroller;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Rect;
@@ -25,7 +24,7 @@ import java.util.List;
 
 import cz.zoubelu.lightcontroller.adapter.CardsAdapter;
 import cz.zoubelu.lightcontroller.model.Card;
-import cz.zoubelu.lightcontroller.service.BackgroundStatsLoaderService;
+import cz.zoubelu.lightcontroller.task.SyncStatsAsyncTask;
 
 public class StatsActivity extends AppCompatActivity {
 
@@ -68,11 +67,10 @@ public class StatsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        final Intent statsLoadIntent = new Intent(this, BackgroundStatsLoaderService.class);
         findViewById(R.id.refresh_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startService(statsLoadIntent);
+                new SyncStatsAsyncTask(StatsActivity.this).execute();
             }
         });
     }
@@ -174,6 +172,28 @@ public class StatsActivity extends AppCompatActivity {
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        findViewById(R.id.refresh_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SyncStatsAsyncTask(StatsActivity.this).execute();
+            }
+        });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        findViewById(R.id.refresh_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SyncStatsAsyncTask(StatsActivity.this).execute();
+            }
+        });
     }
 }
 

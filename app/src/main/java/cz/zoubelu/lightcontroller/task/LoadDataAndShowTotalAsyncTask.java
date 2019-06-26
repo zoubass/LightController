@@ -50,7 +50,8 @@ public class LoadDataAndShowTotalAsyncTask extends AsyncTask<Boolean, Void, List
             Calendar cal = Calendar.getInstance();
             cal.setTime(new Date());
             cal.add(Calendar.DAY_OF_YEAR, -1);
-            lightingValues = DbInitializer.getDb().lightingValuesDao().findForLastDay(cal.getTime().getTime());
+            Date date = cal.getTime();
+            lightingValues = DbInitializer.getDb().lightingValuesDao().findForLastDay(date.getTime());
         }
 
         return lightingValues;

@@ -104,10 +104,10 @@
 
         <Switch
             android:id="@+id/detect_motion"
-            android:layout_width="113dp"
+            android:layout_width="102dp"
             android:layout_height="24dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginLeft="32dp"
+            android:layout_marginStart="36dp"
+            android:layout_marginLeft="36dp"
             android:text="@string/motionLabel"
             app:layout_constraintBaseline_toBaselineOf="@+id/auto_light"
             app:layout_constraintStart_toStartOf="parent" />
