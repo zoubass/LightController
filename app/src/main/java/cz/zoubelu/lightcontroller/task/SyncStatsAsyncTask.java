@@ -1,13 +1,12 @@
-package cz.zoubelu.lightcontroller.service;
+package cz.zoubelu.lightcontroller.task;
 
-import android.app.IntentService;
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,20 +29,21 @@ import java.util.List;
 import cz.zoubelu.lightcontroller.domain.Device;
 import cz.zoubelu.lightcontroller.domain.LightingDay;
 import cz.zoubelu.lightcontroller.domain.MotionDetected;
-import cz.zoubelu.lightcontroller.task.SaveLightingDayAsyncTask;
-import cz.zoubelu.lightcontroller.task.SaveMotionStatsAsyncTask;
+import cz.zoubelu.lightcontroller.service.AppDatabase;
+import cz.zoubelu.lightcontroller.service.DbInitializer;
 
-public class BackgroundStatsLoaderService extends IntentService {
+public class SyncStatsAsyncTask extends AsyncTask<Void, Void, Void> {
+
     private static final String TAG = "StatsLoader";
     private static int TIMEOUT_MS = 5000;
 
+    private Activity activity;
     private static String LIGHT_STATS_ENDPOINT = "/stats";
     private static String MOTION_STATS_ENDPOINT = "/motion_stats";
     private static String HTTP_PREFIX = "http://";
 
 
     private AppDatabase db;
-
 
     private List<LightingDay> lightingDays;
     private List<MotionDetected> motionDetections;
@@ -54,23 +54,18 @@ public class BackgroundStatsLoaderService extends IntentService {
     private boolean motionSynced = false;
     private boolean lightStatsSynced = false;
 
-    public BackgroundStatsLoaderService() {
-        super("StatsUpdateService");
+    public SyncStatsAsyncTask(Activity activity) {
         lightingDays = new ArrayList<>();
         motionDetections = new ArrayList<>();
         db = DbInitializer.getDb();
+        this.activity = activity;
     }
 
-    public BackgroundStatsLoaderService(String name) {
-        super(name);
-        lightingDays = new ArrayList<>();
-        motionDetections = new ArrayList<>();
-        db = DbInitializer.getDb();
-    }
 
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-        ConnectivityManager connManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+    protected Void doInBackground(Void... voids) {
+        showMessage("Starting synchronization.");
+        ConnectivityManager connManager = (ConnectivityManager) activity.getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connManager != null) {
             NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
             long lastDateInDb = db.lightingValuesDao().findLastDaySaved();
@@ -95,12 +90,12 @@ public class BackgroundStatsLoaderService extends IntentService {
             }
         }
 
-        showMessage();
-
+        createFinalMessage();
+        return null;
     }
 
     private void sendRequestToGetStats(String hostIP) {
-        RequestQueue queue = Volley.newRequestQueue(this);
+        RequestQueue queue = Volley.newRequestQueue(activity.getApplicationContext());
 
         final String lightStatsUrl = HTTP_PREFIX + hostIP + LIGHT_STATS_ENDPOINT;
         final String motionStatsUrl = HTTP_PREFIX + hostIP + MOTION_STATS_ENDPOINT;
@@ -229,7 +224,7 @@ public class BackgroundStatsLoaderService extends IntentService {
     }
 
 
-    private void showMessage() {
+    private void createFinalMessage() {
         final StringBuilder builder = new StringBuilder();
 
         builder.append("Sync completed!");
@@ -244,15 +239,18 @@ public class BackgroundStatsLoaderService extends IntentService {
             builder.append("No changes");
         }
 
+        showMessage(builder.toString());
+    }
+
+    private void showMessage(final String message) {
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
 
             @Override
             public void run() {
-                Toast.makeText(getApplicationContext(), "Sync completed. " + builder.toString(),
+                Toast.makeText(activity.getApplicationContext(), message,
                         Toast.LENGTH_SHORT).show();
             }
         });
     }
-
 }

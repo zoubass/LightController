@@ -13,7 +13,7 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#77000000"
+        android:background="#AA000000"
         android:clipToPadding="false"
         android:scrollbars="vertical" />
 

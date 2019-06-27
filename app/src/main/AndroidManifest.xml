@@ -14,9 +14,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".MotionGraphActivity"
+            android:label="@string/title_activity_motion_graph"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
             android:name=".LastDayStatsActivity"
             android:label="@string/title_activity_previous_day_stats"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <service
             android:name=".service.BackgroundStatsLoaderService"

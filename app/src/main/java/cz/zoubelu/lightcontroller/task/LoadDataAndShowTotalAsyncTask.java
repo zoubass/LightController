@@ -3,14 +3,19 @@ package cz.zoubelu.lightcontroller.task;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import com.jjoe64.graphview.DefaultLabelFormatter;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.DataPointInterface;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.OnDataPointTapListener;
+import com.jjoe64.graphview.series.Series;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -42,7 +47,11 @@ public class LoadDataAndShowTotalAsyncTask extends AsyncTask<Boolean, Void, List
         if (isTotal) {
             lightingValues = DbInitializer.getDb().lightingValuesDao().findAll();
         } else {
-            lightingValues = DbInitializer.getDb().lightingValuesDao().findForLastDay();
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(new Date());
+            cal.add(Calendar.DAY_OF_YEAR, -1);
+            Date date = cal.getTime();
+            lightingValues = DbInitializer.getDb().lightingValuesDao().findForLastDay(date.getTime());
         }
 
         return lightingValues;
@@ -62,7 +71,8 @@ public class LoadDataAndShowTotalAsyncTask extends AsyncTask<Boolean, Void, List
 
         GraphView graph = activity.findViewById(graphId);
 
-        graph.setTitle("All time stats");
+        graph.setTitle(isTotal? "All time lighting stats" : "Last day lighting");
+        graph.setTitleColor(Color.WHITE);
         graph.addSeries(series);
 
         graph.getViewport().setMinY(0);
@@ -95,6 +105,19 @@ public class LoadDataAndShowTotalAsyncTask extends AsyncTask<Boolean, Void, List
         graph.getViewport().setScrollableY(true);
         graph.getViewport().setScalable(true);
         graph.getViewport().setScalableY(true);
+
+        series.setOnDataPointTapListener(new OnDataPointTapListener() {
+            @Override
+            public void onTap(Series series, DataPointInterface dataPoint) {
+                if (isTotal) {
+                    Date clickedDate = new Date(Math.round(dataPoint.getX()));
+                    String formattedDay = sdf.format(clickedDate);
+                    Toast.makeText(activity, "Day: " + formattedDay + " Value: " + dataPoint.getY(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(activity, "Hour: " + dataPoint.getX() + " Value: " + dataPoint.getY(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         //graph.setBackgroundColor(Color.BLACK);
         graph.getGridLabelRenderer().setVerticalLabelsColor(Color.WHITE);

@@ -34,6 +34,7 @@ public class AllTimeStatsActivity extends AppCompatActivity {
         if (DbInitializer.getDb() == null) {
             DbInitializer.initDb(this);
         }
+
         new LoadDataAndShowTotalAsyncTask(this, R.id.graph_total).execute(Boolean.TRUE);
     }
 

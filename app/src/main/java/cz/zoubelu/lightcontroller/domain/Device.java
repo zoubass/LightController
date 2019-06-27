@@ -16,6 +16,17 @@ public class Device {
     @ColumnInfo(name = "actual_ip")
     private String actual_ip;
 
+    @ColumnInfo(name = "active")
+    private boolean isActive;
+
+    public Device() {
+    }
+
+    public Device(String name, String actual_ip) {
+        this.name = name;
+        this.actual_ip = actual_ip;
+    }
+
     public long getId() {
         return id;
     }
@@ -38,5 +49,13 @@ public class Device {
 
     public void setActual_ip(String actual_ip) {
         this.actual_ip = actual_ip;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean active) {
+        isActive = active;
     }
 }

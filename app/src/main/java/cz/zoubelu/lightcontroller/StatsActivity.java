@@ -24,6 +24,7 @@ import java.util.List;
 
 import cz.zoubelu.lightcontroller.adapter.CardsAdapter;
 import cz.zoubelu.lightcontroller.model.Card;
+import cz.zoubelu.lightcontroller.task.SyncStatsAsyncTask;
 
 public class StatsActivity extends AppCompatActivity {
 
@@ -41,7 +42,6 @@ public class StatsActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         setContentView(R.layout.activity_stats);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -67,6 +67,12 @@ public class StatsActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        findViewById(R.id.refresh_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SyncStatsAsyncTask(StatsActivity.this).execute();
+            }
+        });
     }
 
 
@@ -75,10 +81,9 @@ public class StatsActivity extends AppCompatActivity {
      * Will show and hide the toolbar title on scroll
      */
     private void initCollapsingToolbar() {
-        final CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        final CollapsingToolbarLayout collapsingToolbar = findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(" ");
-        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        AppBarLayout appBarLayout = findViewById(R.id.appbar);
         appBarLayout.setExpanded(true);
 
         // hiding & showing the title when toolbar expanded & collapsed
@@ -167,6 +172,28 @@ public class StatsActivity extends AppCompatActivity {
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        findViewById(R.id.refresh_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SyncStatsAsyncTask(StatsActivity.this).execute();
+            }
+        });
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        findViewById(R.id.refresh_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SyncStatsAsyncTask(StatsActivity.this).execute();
+            }
+        });
     }
 }
 
