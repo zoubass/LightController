@@ -71,7 +71,7 @@ public class LoadDataAndShowTotalAsyncTask extends AsyncTask<Boolean, Void, List
 
         GraphView graph = activity.findViewById(graphId);
 
-        graph.setTitle(isTotal? "All time lighting stats" : "Previous day lighting");
+        graph.setTitle(isTotal? "All time lighting stats" : "Last day lighting");
         graph.setTitleColor(Color.WHITE);
         graph.addSeries(series);
 

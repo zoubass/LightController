@@ -23,16 +23,9 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import cz.zoubelu.lightcontroller.domain.Device;
-import cz.zoubelu.lightcontroller.domain.LightingDay;
-import cz.zoubelu.lightcontroller.domain.MotionDetected;
 import cz.zoubelu.lightcontroller.service.BackgroundStatsLoaderService;
 import cz.zoubelu.lightcontroller.service.DbInitializer;
 import cz.zoubelu.lightcontroller.task.DiscoveryAsyncTask;

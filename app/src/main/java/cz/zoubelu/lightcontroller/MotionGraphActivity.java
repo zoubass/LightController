@@ -7,7 +7,6 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import cz.zoubelu.lightcontroller.service.DbInitializer;
-import cz.zoubelu.lightcontroller.task.LoadDataAndShowTotalAsyncTask;
 import cz.zoubelu.lightcontroller.task.LoadMotionGraphDataAsyncTask;
 
 public class MotionGraphActivity extends AppCompatActivity {

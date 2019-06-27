@@ -1,6 +1,5 @@
 package cz.zoubelu.lightcontroller;
 
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.Random;
 
 import cz.zoubelu.lightcontroller.domain.LightingDay;
-import cz.zoubelu.lightcontroller.service.BackgroundStatsLoaderService;
 import cz.zoubelu.lightcontroller.service.DbInitializer;
 import cz.zoubelu.lightcontroller.task.LoadDataAndShowTotalAsyncTask;
 

@@ -3,8 +3,6 @@ package cz.zoubelu.lightcontroller.service;
 import android.app.Activity;
 import android.arch.persistence.room.Room;
 
-import cz.zoubelu.lightcontroller.MainActivity;
-
 public class DbInitializer {
     private static AppDatabase db;
 
